@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="file_names">
+        <item>S001R01.edf</item>
+        <item>S001R02.edf</item>
+    </string-array>
+</resources>
