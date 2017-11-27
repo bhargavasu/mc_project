@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Localhost IP Address for Fog Server"/>
+
+    <EditText
+        android:id="@+id/et_localip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Localhost IP"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter the computation ratio between remote server and fog server"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Computation Ratio"/>
+
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Settings"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="center"/>
+
+
+</LinearLayout>

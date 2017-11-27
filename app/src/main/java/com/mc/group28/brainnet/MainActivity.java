@@ -25,6 +25,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner_file;
     ArrayAdapter  adapter;
 
-    
+
 
     String BASE_URL = "http://brainet.herokuapp.com/brainet/api/";
 
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(logging);
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public void getReadPermission(){
 
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CONTACTS)
+                Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
@@ -153,25 +155,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeAuthCall(String fileName,String userName){
 
-        MediaType type = MediaType.parse("text/plain");
+        MediaType type = MediaType.parse("application/octet-stream");
         File file = new File(Environment.getExternalStorageDirectory()+"/EDFData/"+fileName);
-        RequestBody req = RequestBody.create(type,file);
+        final RequestBody req = RequestBody.create(type,file);
         Call<AuthResponse> call = api.authUser(userName,req);
 
-        call.enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                if(response.isSuccessful())
-                    Toast.makeText(MainActivity.this, "Authentication Successful", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-            }
+       call.enqueue(new Callback<AuthResponse>() {
+           @Override
+           public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                    if(response.body().getAuthenticated())
+                        Toast.makeText(MainActivity.this, "Authentication Successful", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+           }
 
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "API call failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+           @Override
+           public void onFailure(Call<AuthResponse> call, Throwable t) {
+               Toast.makeText(MainActivity.this, "Auth Req failed", Toast.LENGTH_SHORT).show();
+           }
+       });
 
     }
 
