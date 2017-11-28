@@ -2,11 +2,11 @@ package com.mc.group28.brainnet;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -25,12 +26,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     String BASE_URL = "http://brainet.herokuapp.com/brainet/api/";
+//    String BASE_URL = "http://10.152.63.35:3000/brainet/api/";
 
     Retrofit retrofit;
 
@@ -76,7 +75,13 @@ public class MainActivity extends AppCompatActivity {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
+
+        httpClient.addInterceptor(logging).connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).client(httpClient.build()).addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
 
-            makeAuthCall(fileName,et_userName.getText().toString());
+            makeAuthCall(fileName, et_userName.getText().toString());
 
         }
 
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeAuthCall(String fileName,String userName){
 
-        MediaType type = MediaType.parse("application/octet-stream");
+        MediaType type = MediaType.parse("text/plain");
         File file = new File(Environment.getExternalStorageDirectory()+"/EDFData/"+fileName);
         final RequestBody req = RequestBody.create(type,file);
         Call<AuthResponse> call = api.authUser(userName,req);
