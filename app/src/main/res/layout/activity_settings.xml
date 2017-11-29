@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,23 +17,47 @@
         android:hint="Localhost IP"/>
 
 
-    <TextView
+    <Button
+        android:id="@+id/btn_get_bw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter the computation ratio between remote server and fog server"/>
+        android:text="Get bandwidth"
+        android:background="@color/colorPrimaryDark"/>
+
+
+    <TextView
+        android:id="@+id/tv_remote_bw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remote Server BW: "/>
+
+    <TextView
+        android:id="@+id/tv_fog_bw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fog Server BW"/>
+
 
 
     <EditText
-        android:layout_width="match_parent"
+        android:id="@+id/et_remote_comp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Computation Ratio"/>
+        android:hint="Remote Server Exec Time"
+        android:inputType="time"/>
 
+    <EditText
+        android:id="@+id/et_fog_comp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Fog Server Exec Time"
+        android:inputType="time"/>
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Settings"
+        android:text="Test"
         android:background="@color/colorPrimary"
         android:layout_gravity="center"/>
 

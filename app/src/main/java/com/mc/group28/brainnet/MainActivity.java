@@ -25,6 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
@@ -57,10 +58,16 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         bindViews();
 
+
+        if(getIntent()!=null){
+
+            BASE_URL = getIntent().getStringExtra("Url");
+        }
     }
 
 
     private void initViews() {
+
 
         btn_auth = (Button) findViewById(R.id.btn_auth);
         et_userName = (EditText) findViewById(R.id.et_username);
