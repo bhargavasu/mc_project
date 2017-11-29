@@ -37,7 +37,7 @@ import retrofit2.http.POST;
 
 public class SettingsActivity extends AppCompatActivity {
 
-
+    EditText etLocalIp;
     Button btnGetBw;
     TextView tvRemoteBw;
     TextView tvFogBw;
@@ -74,6 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initViews() {
 
+        etLocalIp = (EditText) findViewById(R.id.et_localip);
         btnGetBw = (Button) findViewById(R.id.btn_get_bw);
         btnSave = (Button) findViewById(R.id.btn_save);
 
@@ -138,6 +139,11 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if(etLocalIp.getText().toString().trim().equals(""))
+                    FOG_BASE_URL = REMOTE_BASE_URL;
+                else
+                    FOG_BASE_URL = etLocalIp.getText().toString();
+
                 Call<ResponseBody> call = api.getFile();
 
                 call.enqueue(new Callback<ResponseBody>() {
@@ -164,7 +170,7 @@ public class SettingsActivity extends AppCompatActivity {
                 });
 
 
-                setupRetrofitInstance(REMOTE_BASE_URL);
+                setupRetrofitInstance(FOG_BASE_URL);
 
                 Call<ResponseBody> fogCall = api.getFile();
 

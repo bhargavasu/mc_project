@@ -43,5 +43,20 @@
         android:layout_gravity="center_horizontal"
         android:padding="15dp"/>
 
+    <Button
+        android:id="@+id/btn_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Battery Performance"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_batteryStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Battery Level for API Calls"
+        android:visibility="invisible"/>
+
 
 </LinearLayout>
