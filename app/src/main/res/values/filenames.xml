@@ -3,5 +3,13 @@
     <string-array name="file_names">
         <item>S001R01.edf</item>
         <item>S001R02.edf</item>
+        <item>S001R03.edf</item>
+        <item>S001R04.edf</item>
+        <item>S001R05.edf</item>
+        <item>S001R06.edf</item>
+        <item>S001R07.edf</item>
+        <item>S001R08.edf</item>
+        <item>S001R09.edf</item>
+        <item>S001R010.edf</item>
     </string-array>
 </resources>
