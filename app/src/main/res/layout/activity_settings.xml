@@ -14,16 +14,20 @@
         android:id="@+id/et_localip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textUri"
-        android:hint="Localhost IP"/>
+        android:inputType="number"
+        android:digits="0123456789."
+        android:hint="Localhost IP : Eg: 192.168.0.229"/>
 
 
     <Button
         android:id="@+id/btn_get_bw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:paddingLeft="20pt"
+        android:paddingRight="20pt"
         android:text="Get bandwidth"
-        android:background="@color/colorPrimaryDark"/>
+        android:textColor="@android:color/white" />
 
 
     <TextView
@@ -59,6 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test"
+        android:textColor="@android:color/white"
         android:background="@color/colorPrimary"
         android:layout_gravity="center"/>
 

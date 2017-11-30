@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -27,9 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 
 /**
  * Created by bhargav on 11/27/17.
@@ -102,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    public  void setupRetrofitInstance(String newApiBaseUrl) {
+    public void setupRetrofitInstance(String newApiBaseUrl) {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
@@ -139,10 +136,10 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(etLocalIp.getText().toString().trim().equals(""))
+                if (etLocalIp.getText().toString().trim().equals(""))
                     FOG_BASE_URL = REMOTE_BASE_URL;
                 else
-                    FOG_BASE_URL = etLocalIp.getText().toString();
+                    FOG_BASE_URL = "http://" + etLocalIp.getText().toString() + ":3000/brainet/api/";
 
                 Call<ResponseBody> call = api.getFile();
 
@@ -216,10 +213,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    public void chooseServer(){
+    public void chooseServer() {
 
-            double remoteTime = Integer.parseInt(etRemoteComp.getText().toString()) + (1.3*1024)/remotebw;
-            double fogTime = Integer.parseInt(etFogComp.getText().toString()) + (1.3*1024)/fogbw;
+        double remoteTime = remotebw + ((1.3 * 1024) / Integer.parseInt(etRemoteComp.getText().toString()));
+        double fogTime = fogbw + ((1.3 * 1024) / Integer.parseInt(etFogComp.getText().toString()));
 
             if(remoteTime > fogTime) {
                 BASE_URL = FOG_BASE_URL;

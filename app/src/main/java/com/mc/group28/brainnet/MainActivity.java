@@ -40,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
     Button btn_auth;
     EditText et_userName;
     Spinner spinner_file;
-    ArrayAdapter  adapter;
+    ArrayAdapter adapter;
     Button btnBattery;
     TextView tvBatteryStatus;
 
-    String BASE_URL = "http://brainet.herokuapp.com/brainet/api/";
+    String BASE_URL;
+
+//    String BASE_URL = "http://brainet.herokuapp.com/brainet/api/";
 //    String BASE_URL = "http://10.152.63.35:3000/brainet/api/";
 
     Retrofit retrofit;
@@ -55,21 +57,21 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog pd;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        if (getIntent() != null) {
+            BASE_URL = getIntent().getStringExtra("Url");
+        } else {
+            BASE_URL = "http://brainet.herokuapp.com/brainet/api/";
+        }
+
         initViews();
         bindViews();
 
-
-        if(getIntent()!=null){
-
-            BASE_URL = getIntent().getStringExtra("Url");
-        }
     }
 
 
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //spinner_file.setPrompt("Please select file ");
         tvBatteryStatus = (TextView) findViewById(R.id.tv_batteryStatus);
 
-        adapter = ArrayAdapter.createFromResource(this,R.array.file_names,android.R.layout.simple_spinner_dropdown_item);
+        adapter = ArrayAdapter.createFromResource(this, R.array.file_names, android.R.layout.simple_spinner_dropdown_item);
 
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -97,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
-
 
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).client(httpClient.build()).addConverterFactory(GsonConverterFactory.create()).build();
@@ -120,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fileName = spinner_file.getSelectedItem().toString();
 
-                if(et_userName.getText().toString().trim().equals(""))
+                if (et_userName.getText().toString().trim().equals(""))
                     Toast.makeText(MainActivity.this, "Please enter userName to proceed", Toast.LENGTH_SHORT).show();
-                else{
+                else {
                     getReadPermission();
 
                 }
@@ -137,30 +138,27 @@ public class MainActivity extends AppCompatActivity {
                 int i = 0;
 
                 MediaType type = MediaType.parse("text/plain");
-                File file = new File(Environment.getExternalStorageDirectory()+"/EDFData/"+fileName);
-                final RequestBody req = RequestBody.create(type,file);
+                File file = new File(Environment.getExternalStorageDirectory() + "/EDFData/" + fileName);
+                final RequestBody req = RequestBody.create(type, file);
 
-                while(i<50){
-                    Call<AuthResponse> testCall = api.authUser(et_userName.getText().toString(),req);
+                while (i < 50) {
+                    Call<AuthResponse> testCall = api.authUser(et_userName.getText().toString(), req);
                     testCall.enqueue(new Callback<AuthResponse>() {
                         @Override
                         public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                            tvBatteryStatus.setText("Battery Level :"+String.valueOf(getBatteryLevel()));
+                            tvBatteryStatus.setText("Battery Level :" + String.valueOf(getBatteryLevel()));
                         }
 
                         @Override
                         public void onFailure(Call<AuthResponse> call, Throwable t) {
-                            tvBatteryStatus.setText("Battery Level :"+String.valueOf(getBatteryLevel()));
+                            tvBatteryStatus.setText("Battery Level :" + String.valueOf(getBatteryLevel()));
                         }
                     });
 
                     i++;
 
 
-
                 }
-
-
 
 
             }
@@ -176,14 +174,14 @@ public class MainActivity extends AppCompatActivity {
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
         // Error checking that probably isn't needed but I added just in case.
-        if(level == -1 || scale == -1) {
+        if (level == -1 || scale == -1) {
             return 50.0f;
         }
 
-        return ((float)level / (float)scale) * 100.0f;
+        return ((float) level / (float) scale) * 100.0f;
     }
 
-    public void getReadPermission(){
+    public void getReadPermission() {
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -209,57 +207,53 @@ public class MainActivity extends AppCompatActivity {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
-        }
-        else{
+        } else {
 
             makeAuthCall(fileName, et_userName.getText().toString());
 
         }
 
 
-
     }
 
 
-    public interface Api_interface{
+    public interface Api_interface {
 
         @POST("auth")
         @Multipart
-        Call<AuthResponse> authUser (@Part("username") String userName, @Part("eeg_data") RequestBody req);
+        Call<AuthResponse> authUser(@Part("username") String userName, @Part("eeg_data") RequestBody req);
 
     }
 
-    private void makeAuthCall(String fileName,String userName){
+    private void makeAuthCall(String fileName, String userName) {
 
         pd.show();
 
         MediaType type = MediaType.parse("text/plain");
-        File file = new File(Environment.getExternalStorageDirectory()+"/EDFData/"+fileName);
-        final RequestBody req = RequestBody.create(type,file);
-        Call<AuthResponse> call = api.authUser(userName,req);
+        File file = new File(Environment.getExternalStorageDirectory() + "/EDFData/" + fileName);
+        final RequestBody req = RequestBody.create(type, file);
+        Call<AuthResponse> call = api.authUser(userName, req);
 
-       call.enqueue(new Callback<AuthResponse>() {
-           @Override
-           public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+        call.enqueue(new Callback<AuthResponse>() {
+            @Override
+            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
-                    pd.dismiss();
+                pd.dismiss();
 
-                    if(response.body().getAuthenticated())
-                        Toast.makeText(MainActivity.this, "Authentication Successful", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-           }
+                if (response.body().getAuthenticated())
+                    Toast.makeText(MainActivity.this, "Authentication Successful", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+            }
 
 
-
-           @Override
-           public void onFailure(Call<AuthResponse> call, Throwable t) {
-               Toast.makeText(MainActivity.this, "Auth Req failed", Toast.LENGTH_SHORT).show();
-           }
-       });
+            @Override
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Auth Req failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
-
 
 
 }
